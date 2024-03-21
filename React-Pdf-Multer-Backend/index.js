@@ -132,7 +132,7 @@ app.delete("/delete-file/:id", async (req, res) => {
     res.status(500).json({ status: "error", message: "Failed to delete file" });
   }
 });
-
+  
 app.get("/get-files", async (req, res) => {
   try {
     const files = await PdfSchema.find({});
