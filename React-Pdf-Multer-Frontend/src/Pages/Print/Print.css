@@ -1,0 +1,14 @@
+.print-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem !important;
+}
+
+.card-header-name {
+  width: 100%;
+  padding: 0.3rem;
+  margin: 0 !important;
+  padding-bottom: 0;
+}
