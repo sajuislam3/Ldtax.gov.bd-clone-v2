@@ -29,7 +29,6 @@ function Dashboard() {
       console.error("Error fetching PDFs:", error);
     }
   };
-
   const submitImage = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -48,12 +47,22 @@ function Dashboard() {
       if (result.data.status === "ok") {
         alert("Uploaded Successfully!!!");
         getPdf();
-      } else if (result.data.status === "error") {
-        // Display warning message to the user
-        alert(result.data.message);
       }
     } catch (error) {
-      console.error("Error uploading PDF:", error);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        // Display the error message to the user
+        alert(error.response.data.message);
+      } else {
+        console.error("Error uploading PDF:", error);
+        // Show a generic error message if the specific error message is not available
+        alert(
+          "An error occurred while uploading the PDF. Please try again later."
+        );
+      }
     }
   };
 
