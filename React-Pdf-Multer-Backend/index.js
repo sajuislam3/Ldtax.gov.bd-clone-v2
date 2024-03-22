@@ -32,8 +32,8 @@ const storage = multer.diskStorage({
     cb(null, "./files");
   },
   filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now();
-    cb(null, uniqueSuffix + file.originalname);
+    const uniqueSuffix = generateRandomString(20);
+    cb(null, uniqueSuffix + ".pdf");
   },
 });
 
@@ -51,18 +51,50 @@ const generateRandomString = (length) => {
   return result;
 };
 
+// Function to count the total number of files in MongoDB
+const countFilesInDB = async () => {
+  try {
+    const count = await PdfSchema.countDocuments();
+    return count;
+  } catch (error) {
+    console.error("Error counting files in MongoDB:", error);
+    throw error;
+  }
+};
+
 app.post("/upload-files", upload.single("file"), async (req, res) => {
   try {
-    // Read the uploaded file from disk
+    const fileLimit = 5; // Define the file limit
+    // Check if the total number of files exceeds the limit
+    const fileCount = await PdfSchema.countDocuments();
+    if (fileCount >= fileLimit) {
+      // Fetch the oldest files
+      const oldestFiles = await PdfSchema.find(
+        {},
+        {},
+        { sort: { createdAt: 1 }, limit: fileCount - fileLimit + 1 }
+      );
+
+      // Prepare the warning message
+      let warningMessage = `File limit exceeded! Please delete the following files created first: \n`;
+      oldestFiles.forEach((file, index) => {
+        warningMessage += `${index + 1}. ${file.title}\n`; // Assuming 'title' field represents the name of the file
+      });
+
+      // Send the warning message to the client
+      return res.status(400).json({ status: "error", message: warningMessage });
+    }
+
+    // Continue with file upload process
     const filePath = req.file.path;
     const fileData = fs.readFileSync(filePath);
 
     // Load the PDF document
     const pdfDoc = await PDFDocument.load(fileData);
 
-    // Generate QR code text and embed it in each page of the PDF document
     const randomText = generateRandomString(20);
-    const qrText = `http://localhost:5000/updatedPDF/${randomText}`;
+    // Generate QR code text and embed it in each page of the PDF document
+    const qrText = `http://localhost:5000/print/${randomText}`;
     const pageCount = pdfDoc.getPageCount();
 
     for (let i = 0; i < pageCount; i++) {
@@ -89,12 +121,13 @@ app.post("/upload-files", upload.single("file"), async (req, res) => {
     // Save the modified PDF document
     const modifiedPdfBytes = await pdfDoc.save();
 
-    // Write the modified PDF document back to disk
-    fs.writeFileSync(filePath, modifiedPdfBytes);
+    // Rename the file before saving to local storage
+    const fileName = randomText + ".pdf";
+    const newFilePath = `./files/${fileName}`;
+    fs.writeFileSync(newFilePath, modifiedPdfBytes);
 
     // Save PDF details to MongoDB or perform other operations
     const title = req.body.title;
-    const fileName = req.file.filename;
     await PdfSchema.create({ title: title, pdf: fileName });
 
     res.send({ status: "ok" });
@@ -103,7 +136,6 @@ app.post("/upload-files", upload.single("file"), async (req, res) => {
     res.status(500).json({ status: "error", message: error.message });
   }
 });
-
 
 // Define the delete API endpoint
 app.delete("/delete-file/:id", async (req, res) => {
@@ -132,10 +164,12 @@ app.delete("/delete-file/:id", async (req, res) => {
     res.status(500).json({ status: "error", message: "Failed to delete file" });
   }
 });
-  
+
 app.get("/get-files", async (req, res) => {
   try {
-    const files = await PdfSchema.find({});
+    // Fetch files from MongoDB and sort them based on creation date in descending order
+    const files = await PdfSchema.find({}).sort({ createdAt: -1 });
+
     res.json({ status: "ok", data: files });
   } catch (error) {
     console.error("Error fetching files:", error);
