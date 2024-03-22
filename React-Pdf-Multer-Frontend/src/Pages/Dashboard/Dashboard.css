@@ -1,0 +1,8 @@
+.my-uploaded-files {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+}
+.my-buttons > * {
+  margin: 0.2rem;
+}

@@ -16,19 +16,26 @@ function Print() {
   return (
     <div className=" ">
       <div className="  print-card  border">
-        <div className="  card-header-name text-white bg-primary">
+        <div
+          className="  card-header-name text-white  "
+          style={{ backgroundColor: "#4B8DF8" }}
+        >
           <p className="m-0 p-1">ভূমি উন্নয়ন কর পরিশোধ রসিদ</p>
         </div>
 
-        <div className="pdf-popup mx-auto w-full" ref={componentRef}>
+        <div className="pdf-popup mx-auto  " ref={componentRef}>
           {pdfFile && <PdfComp pdfFile={pdfFile} />}
         </div>
 
         <button
           type="button"
           onClick={handlePrint}
-          className="btn ml-4 btn-md btn-success mt-4 bg-[#4B8DF8] text-white"
-          style={{ margin: "20px", padding: "10px" }}
+          className="btn ml-4 btn-md btn-success mt-4 text-white"
+          style={{
+            margin: "20px",
+            padding: "10px",
+            backgroundColor: "#4B8DF8",
+          }}
         >
           প্রিন্ট
         </button>

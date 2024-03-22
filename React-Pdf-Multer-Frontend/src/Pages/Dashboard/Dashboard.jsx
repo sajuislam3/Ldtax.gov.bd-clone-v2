@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import PdfComp from "../PdfComp";
+import PdfComp from "../../PdfComp";
 import { pdfjs } from "react-pdf";
+import "./Dashboard.css";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -47,6 +48,9 @@ function Dashboard() {
       if (result.data.status === "ok") {
         alert("Uploaded Successfully!!!");
         getPdf();
+      } else if (result.data.status === "error") {
+        // Display warning message to the user
+        alert(result.data.message);
       }
     } catch (error) {
       console.error("Error uploading PDF:", error);
@@ -92,14 +96,16 @@ function Dashboard() {
 
   const handlePrint = (pdf) => {
     navigate(`/print/${pdf}`, {
-      state: { pdfFile: `http://localhost:5001/files/${pdf}` },
+      state: {
+        pdfFile: `http://localhost:5001/files/${pdf}`,
+      },
     });
   };
 
   return (
     <div className="App">
       <form className="formStyle" onSubmit={submitImage}>
-        <h4>Upload Pdf in React</h4>
+        <h4>Upload Pdf in Here</h4>
         <br />
         <input
           type="text"
@@ -123,29 +129,31 @@ function Dashboard() {
       </form>
       <div className="uploaded">
         <h4>Uploaded PDF:</h4>
-        <div className="output-div">
+        <div className="output-div my-uploaded-files">
           {allImage &&
             allImage.map((data) => (
-              <div className="inner-div" key={data._id}>
+              <div className="inner-div border p-3 rounded m-2" key={data._id}>
                 <h6>Title: {data.title}</h6>
-                <button
-                  className="btn btn-primary mr-2"
-                  onClick={() => showPdf(data.pdf)}
-                >
-                  Show Pdf
-                </button>
-                <button
-                  className="btn btn-danger mr-2"
-                  onClick={() => deletePdf(data._id, data.pdf)}
-                >
-                  Delete
-                </button>
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => handlePrint(data.pdf)}
-                >
-                  Print
-                </button>
+                <div className="my-buttons">
+                  <button
+                    className="btn btn-primary mr-2"
+                    onClick={() => showPdf(data.pdf)}
+                  >
+                    Show Pdf
+                  </button>
+                  <button
+                    className="btn btn-danger mr-2"
+                    onClick={() => deletePdf(data._id, data.pdf)}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => handlePrint(data.pdf)}
+                  >
+                    Share
+                  </button>
+                </div>
               </div>
             ))}
         </div>

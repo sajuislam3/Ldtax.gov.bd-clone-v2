@@ -1,16 +1,18 @@
-import { createBrowserRouter } from "react-router-dom";
-import Dashboard from "../Pages/Dashboard";
+import { Navigate, createBrowserRouter } from "react-router-dom";
+
 import Print from "../Pages/Print/Print";
 import Home from "../Pages/Home";
 import App from "../App";
+import Dashboard from "../Pages/Dashboard/Dashboard";
+import Redirect from "../Pages/Redirect";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home></Home>,
+    element: <Redirect />,
   },
   {
-    path: "/dashboard",
+    path: "/wp-admin",
     element: <Dashboard></Dashboard>,
   },
   {
