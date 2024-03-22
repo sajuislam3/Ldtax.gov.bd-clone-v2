@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import PdfComp from "../../PdfComp";
 import { pdfjs } from "react-pdf";
 import "./Dashboard.css";
+import Header from "../Shared/Header/Header";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -112,63 +113,69 @@ function Dashboard() {
   };
 
   return (
-    <div className="App">
-      <form className="formStyle" onSubmit={submitImage}>
-        <h4>Upload Pdf in Here</h4>
-        <br />
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Title"
-          required
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <br />
-        <input
-          type="file"
-          className="form-control"
-          accept="application/pdf"
-          required
-          onChange={(e) => setFile(e.target.files[0])}
-        />
-        <br />
-        <button className="btn btn-primary" type="submit">
-          Submit
-        </button>
-      </form>
-      <div className="uploaded">
-        <h4>Uploaded PDF:</h4>
-        <div className="output-div my-uploaded-files">
-          {allImage &&
-            allImage.map((data) => (
-              <div className="inner-div border p-3 rounded m-2" key={data._id}>
-                <h6>Title: {data.title}</h6>
-                <div className="my-buttons">
-                  <button
-                    className="btn btn-primary mr-2"
-                    onClick={() => showPdf(data.pdf)}
-                  >
-                    Show Pdf
-                  </button>
-                  <button
-                    className="btn btn-danger mr-2"
-                    onClick={() => deletePdf(data._id, data.pdf)}
-                  >
-                    Delete
-                  </button>
-                  <button
-                    className="btn btn-secondary"
-                    onClick={() => handlePrint(data.pdf)}
-                  >
-                    Share
-                  </button>
+    <>
+      <Header></Header>
+      <div className="App">
+        <form className="formStyle" onSubmit={submitImage}>
+          <h4>Upload Pdf in Here</h4>
+          <br />
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Title"
+            required
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <br />
+          <input
+            type="file"
+            className="form-control"
+            accept="application/pdf"
+            required
+            onChange={(e) => setFile(e.target.files[0])}
+          />
+          <br />
+          <button className="btn btn-primary" type="submit">
+            Submit
+          </button>
+        </form>
+        <div className="uploaded">
+          <h4>Uploaded PDF:</h4>
+          <div className="output-div my-uploaded-files">
+            {allImage &&
+              allImage.map((data) => (
+                <div
+                  className="inner-div border p-3 rounded m-2"
+                  key={data._id}
+                >
+                  <h6>Title: {data.title}</h6>
+                  <div className="my-buttons">
+                    <button
+                      className="btn btn-primary mr-2"
+                      onClick={() => showPdf(data.pdf)}
+                    >
+                      Show Pdf
+                    </button>
+                    <button
+                      className="btn btn-danger mr-2"
+                      onClick={() => deletePdf(data._id, data.pdf)}
+                    >
+                      Delete
+                    </button>
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => handlePrint(data.pdf)}
+                    >
+                      Share
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+          </div>
         </div>
+        {pdfFile && <PdfComp pdfFile={pdfFile} />}
       </div>
-      {pdfFile && <PdfComp pdfFile={pdfFile} />}
-    </div>
+    </>
   );
 }
 

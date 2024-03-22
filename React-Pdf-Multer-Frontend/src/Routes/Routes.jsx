@@ -5,6 +5,9 @@ import Home from "../Pages/Home";
 import App from "../App";
 import Dashboard from "../Pages/Dashboard/Dashboard";
 import Redirect from "../Pages/Redirect";
+import Register from "../Pages/Register/Register";
+import Login from "../Pages/Login/Login";
+import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -13,10 +16,22 @@ export const router = createBrowserRouter([
   },
   {
     path: "/wp-admin",
-    element: <Dashboard></Dashboard>,
+    element: (
+      <PrivateRoute>
+        <Dashboard></Dashboard>
+      </PrivateRoute>
+    ),
   },
   {
     path: "/print/:id",
     element: <App></App>,
+  },
+  {
+    path: "/register",
+    element: <Register></Register>,
+  },
+  {
+    path: "/login",
+    element: <Login></Login>,
   },
 ]);

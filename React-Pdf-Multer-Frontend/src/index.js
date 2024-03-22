@@ -10,13 +10,16 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import { Router, RouterProvider } from "react-router-dom";
 import { router } from "./Routes/Routes";
+import AuthProvider from "./context/AuthProvider/AuthProvider";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router}>
-      <App />
-    </RouterProvider>
+    <AuthProvider>
+      <RouterProvider router={router}>
+        <App />
+      </RouterProvider>
+    </AuthProvider>
   </React.StrictMode>
 );
 
