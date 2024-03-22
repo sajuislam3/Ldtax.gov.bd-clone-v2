@@ -64,25 +64,16 @@ const countFilesInDB = async () => {
 
 app.post("/upload-files", upload.single("file"), async (req, res) => {
   try {
-    const fileLimit = 5; // Define the file limit
-    // Check if the total number of files exceeds the limit
-    const fileCount = await PdfSchema.countDocuments();
-    if (fileCount >= fileLimit) {
-      // Fetch the oldest files
-      const oldestFiles = await PdfSchema.find(
-        {},
-        {},
-        { sort: { createdAt: 1 }, limit: fileCount - fileLimit + 1 }
-      );
+    const fileCount = await countFilesInDB();
+    if (fileCount >= 5) {
+      // Get the oldest file from the database
+      const oldestFile = await PdfSchema.findOne().sort({ createdAt: 1 });
 
-      // Prepare the warning message
-      let warningMessage = `File limit exceeded! Please delete the following files created first: \n`;
-      oldestFiles.forEach((file, index) => {
-        warningMessage += `${index + 1}. ${file.title}\n`; // Assuming 'title' field represents the name of the file
+      // Send a warning message indicating which file to delete
+      return res.status(400).json({
+        status: "error",
+        message: `File limit exceeded. Please delete the file titled "${oldestFile.title}" (${oldestFile.pdf}) and try again.`,
       });
-
-      // Send the warning message to the client
-      return res.status(400).json({ status: "error", message: warningMessage });
     }
 
     // Continue with file upload process
