@@ -32,6 +32,13 @@ function Dashboard() {
   };
   const submitImage = async (e) => {
     e.preventDefault();
+
+    // Check if a file is selected
+    if (!file) {
+      alert("Please select a file to upload.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("title", title);
     formData.append("file", file);
@@ -129,6 +136,7 @@ function Dashboard() {
           <br />
           <input
             type="file"
+            name="file"
             className="form-control"
             accept="application/pdf"
             required
