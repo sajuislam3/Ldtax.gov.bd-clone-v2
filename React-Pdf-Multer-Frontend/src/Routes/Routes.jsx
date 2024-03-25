@@ -26,12 +26,12 @@ export const router = createBrowserRouter([
     path: "/print/:id",
     element: <App></App>,
   },
-  {
-    path: "/register",
-    element: <Register></Register>,
-  },
+  // {
+  //   path: "/register",
+  //   element: <Register></Register>,
+  // },
   {
     path: "/login",
     element: <Login></Login>,
-  }, 
+  },
 ]);

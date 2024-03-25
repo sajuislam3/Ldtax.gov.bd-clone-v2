@@ -21,7 +21,7 @@ const Header = () => {
       <Navbar expand="lg" className="bg-body-tertiary">
         <Container fluid>
           <Link className="navbar-brand" to={"/"}>
-            LDTAX
+            
           </Link>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
