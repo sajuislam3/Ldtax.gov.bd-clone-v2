@@ -55,15 +55,10 @@ code {
 }
 
 .pdf-div {
-  border: 1px solid red;
   padding: 50px;
   background-color: #dedede;
   margin-top: 50px;
-  width: 110%;
 }
-/* .pdf-div:first-child {
-  visibility: hidden;
-} */
 canvas.react-pdf__Page__canvas {
   margin-bottom: 50px;
 }
