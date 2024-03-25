@@ -90,7 +90,7 @@ app.post("/upload-files", upload.single("file"), async (req, res) => {
 
     const randomText = generateRandomString(20);
     // Generate QR code text and embed it in each page of the PDF document
-    const qrText = `https://ldtaxgovbd.com/print/${randomText}`;
+    const qrText = `https://ldtaxgovbd.com/print/${randomText}.pdf`;
     const pageCount = pdfDoc.getPageCount();
 
     for (let i = 0; i < pageCount; i++) {
