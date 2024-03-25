@@ -70,7 +70,7 @@ const countFilesInDB = async () => {
 app.post("/upload-files", upload.single("file"), async (req, res) => {
   try {
     const fileCount = await countFilesInDB();
-    if (fileCount >= 500) {
+    if (fileCount >= 100) {
       // Get the oldest file from the database
       const oldestFile = await PdfSchema.findOne().sort({ createdAt: 1 });
 
@@ -82,7 +82,7 @@ app.post("/upload-files", upload.single("file"), async (req, res) => {
     }
 
     // Continue with file upload process
-    const filePath = req?.file?.path;
+    const filePath = req.file.path;
     const fileData = fs.readFileSync(filePath);
 
     // Load the PDF document
