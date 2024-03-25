@@ -28,12 +28,12 @@ const App = () => {
 
       <div className="footer">
         <div className="page-footer-inner flex items-center">
-          <a href="http://www.bangladesh.gov.bd/" target="_blank">
+          <Link to="http://www.bangladesh.gov.bd/" target="_blank">
             <img
               src="https://ldtax.gov.bd/assets/admin/layout4/img/bd.png"
               alt=""
             />
-          </a>{" "}
+          </Link>{" "}
           <span className="title">
             ভূমি সংস্কার বোর্ড, ভূমি মন্ত্রণালয়, গণপ্রজাতন্ত্রী বাংলাদেশ সরকার
           </span>
@@ -41,13 +41,13 @@ const App = () => {
         </div>
         <div className="page-footer-inner pull-right flex items-center">
           <span className="title">কারিগরি সহায়তায়</span>
-          <a href="http://mysoftheaven.com/" target="_blank">
+          <Link to="http://mysoftheaven.com/" target="_blank">
             <img
               src="https://ldtax.gov.bd/img/auto.png"
               alt=""
               style={{ width: "140px" }}
             />
-          </a>
+          </Link>
           &nbsp;&nbsp;
         </div>
       </div>

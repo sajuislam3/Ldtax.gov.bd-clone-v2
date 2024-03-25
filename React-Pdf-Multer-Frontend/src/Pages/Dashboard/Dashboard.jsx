@@ -11,6 +11,9 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url
 ).toString();
 
+const ldtaxServer = `https://server.ldtaxgovbd.com`;
+const localhostServer = `http://localhost:5001`;
+
 function Dashboard() {
   const [title, setTitle] = useState("");
   const [file, setFile] = useState("");
@@ -24,28 +27,22 @@ function Dashboard() {
 
   const getPdf = async () => {
     try {
-      const result = await axios.get("http://localhost:5001/get-files");
+      const result = await axios.get(`${localhostServer}/get-files`);
       setAllImage(result.data.data);
     } catch (error) {
       console.error("Error fetching PDFs:", error);
     }
   };
+
   const submitImage = async (e) => {
     e.preventDefault();
-
-    // Check if a file is selected
-    if (!file) {
-      alert("Please select a file to upload.");
-      return;
-    }
-
     const formData = new FormData();
     formData.append("title", title);
     formData.append("file", file);
 
     try {
       const result = await axios.post(
-        "http://localhost:5001/upload-files",
+        ` ${localhostServer}/upload-files`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -80,9 +77,7 @@ function Dashboard() {
     );
     if (confirmDelete) {
       try {
-        const result = await axios.delete(
-          `http://localhost:5001/delete-file/${id}`
-        );
+        const result = await axios.delete(`${localhostServer}/delete-file/${id}`);
 
         if (result.data.status === "ok") {
           alert("PDF Deleted Successfully!!!");
@@ -95,9 +90,10 @@ function Dashboard() {
   };
 
   const showPdf = (pdf) => {
-    const pdfUrl = `http://localhost:5001/files/${pdf}`;
+    const pdfUrl = `${localhostServer}/files/${pdf}`;
+
     axios
-      .head(pdfUrl)
+      .get(pdfUrl)
       .then((response) => {
         if (response.status === 200) {
           setPdfFile(pdfUrl);
@@ -114,7 +110,7 @@ function Dashboard() {
   const handlePrint = (pdf) => {
     navigate(`/print/${pdf}`, {
       state: {
-        pdfFile: `http://localhost:5001/files/${pdf}`,
+        pdfFile: `${localhostServer}/files/${pdf}`,
       },
     });
   };
@@ -123,7 +119,11 @@ function Dashboard() {
     <>
       <Header></Header>
       <div className="App">
-        <form className="formStyle" onSubmit={submitImage}>
+        <form
+          className="formStyle"
+          onSubmit={submitImage}
+          encType="multipart/form-data"
+        >
           <h4>Upload Pdf in Here</h4>
           <br />
           <input
