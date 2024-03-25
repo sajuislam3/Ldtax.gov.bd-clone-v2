@@ -4,10 +4,11 @@ import PdfComp from "../../PdfComp";
 import { useReactToPrint } from "react-to-print";
 import "./Print.css";
 
-function Print() {
+function Print({ filename }) {
   const componentRef = useRef();
   const location = useLocation();
-  const pdfFile = location.state.pdfFile;
+  // const pdfFile = location.state.pdfFile;
+  console.log(filename);
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -24,7 +25,7 @@ function Print() {
         </div>
 
         <div className="pdf-popup mx-auto  " ref={componentRef}>
-          {pdfFile && <PdfComp pdfFile={pdfFile} />}
+          {<PdfComp pdfFile={`/server/files/${filename}`} />}
         </div>
 
         <button

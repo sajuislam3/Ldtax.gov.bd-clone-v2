@@ -1,13 +1,15 @@
 import React from "react";
 import Print from "./Pages/Print/Print";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import PdfComp from "./PdfComp";
 
 import "./App.css";
 
 const App = () => {
   const location = useLocation();
-  const pdfFile = location.state.pdfFile;
+  // const pdfFile = location.state.pdfFile;
+  const params = useParams();
+  console.log(params);
 
   return (
     <div className="siteuimain">
@@ -24,7 +26,7 @@ const App = () => {
         <img src="https://ldtax.gov.bd/assets/admin/layout4/img/nagorik.png" />
       </div>
 
-      <Print />
+      <Print filename={params.id} />
 
       <div className="footer">
         <div className="page-footer-inner flex items-center">

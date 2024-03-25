@@ -13,12 +13,14 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 const ldtaxServer = `https://server.ldtaxgovbd.com`;
 const localhostServer = `http://localhost:5001`;
+const nameCheapServer = `smartgirlsconference.com`;
+const myServer = ldtaxServer;
 
 function Dashboard() {
   const [title, setTitle] = useState("");
   const [file, setFile] = useState("");
   const [allImage, setAllImage] = useState(null);
-  const [pdfFile, setPdfFile] = useState(null);
+  // const [pdfFile, setPdfFile] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,7 +29,7 @@ function Dashboard() {
 
   const getPdf = async () => {
     try {
-      const result = await axios.get(`${localhostServer}/get-files`);
+      const result = await axios.get(`${myServer}/get-files`);
       setAllImage(result.data.data);
     } catch (error) {
       console.error("Error fetching PDFs:", error);
@@ -41,13 +43,9 @@ function Dashboard() {
     formData.append("file", file);
 
     try {
-      const result = await axios.post(
-        ` ${localhostServer}/upload-files`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const result = await axios.post(`${myServer}/upload-files`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       if (result.data.status === "ok") {
         alert("Uploaded Successfully!!!");
@@ -77,7 +75,7 @@ function Dashboard() {
     );
     if (confirmDelete) {
       try {
-        const result = await axios.delete(`${localhostServer}/delete-file/${id}`);
+        const result = await axios.delete(`${myServer}/delete-file/${id}`);
 
         if (result.data.status === "ok") {
           alert("PDF Deleted Successfully!!!");
@@ -90,16 +88,24 @@ function Dashboard() {
   };
 
   const showPdf = (pdf) => {
-    const pdfUrl = `${localhostServer}/files/${pdf}`;
+    const pdfUrl = `${myServer}/files/${pdf}`;
+
+    // Define headers to handle CORS
+    const headers = {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      // Add any other headers as needed
+    };
 
     axios
-      .get(pdfUrl)
+      .get(pdfUrl, { headers }) // Pass headers as options
       .then((response) => {
-        if (response.status === 200) {
-          setPdfFile(pdfUrl);
-        } else {
+        if (response.status != 200) {
           alert("PDF file not found!");
         }
+        // else {
+        //   // setPdfFile(pdfUrl);
+        // }
       })
       .catch((error) => {
         console.error("Error checking PDF file:", error);
@@ -108,12 +114,64 @@ function Dashboard() {
   };
 
   const handlePrint = (pdf) => {
-    navigate(`/print/${pdf}`, {
-      state: {
-        pdfFile: `${localhostServer}/files/${pdf}`,
-      },
-    });
+    navigate(
+      `/print/${pdf}`
+      // {
+      //   state: {
+      //     pdfFile: `${myServer}/files/${pdf}`,
+      //     // pdfFile: `/server/files/${pdf}`,
+      //   },
+      // },
+    );
   };
+
+  // Updated function to fetch PDF from MongoDB using filename
+  // const fetchPdfFromMongoFilename = async (filename) => {
+  //   try {
+  //     const response = await axios.get(`${myServer}/files/${filename}`, {
+  //       responseType: "blob",
+  //     });
+
+  //     const blob = new Blob([response.data], { type: "application/pdf" });
+  //     const pdfUrl = URL.createObjectURL(blob);
+  //     setPdfFile(pdfUrl);
+  //   } catch (error) {
+  //     console.error("Error fetching PDF from MongoDB:", error);
+  //     alert("Error fetching PDF from MongoDB");
+  //   }
+  // };
+
+  // const getFilesByFilename = async (filename) => {
+  //   try {
+  //     // Construct the URL to fetch the file from the server
+  //     const fileUrl = `${myServer}/get-file/${filename}`;
+
+  //     // Use Axios to fetch the file
+  //     const response = await axios.get(fileUrl, { responseType: "blob" });
+
+  //     // Create a Blob from the response data
+  //     const blob = new Blob([response.data], { type: "application/pdf" });
+
+  //     // Create a URL for the Blob object
+  //     const fileBlobUrl = URL.createObjectURL(blob);
+
+  //     // Set the PDF file URL to state
+  //     setPdfFile(fileBlobUrl);
+  //   } catch (error) {
+  //     console.error("Error fetching file:", error);
+  //     alert("Error fetching file");
+  //   }
+  // };
+
+  // const getFilesByMongoId = async (id, filename) => {
+  //   try {
+  //     // Call the function to fetch PDF from MongoDB using filename
+  //     await fetchPdfFromMongoFilename(filename);
+  //   } catch (error) {
+  //     console.error("Error fetching PDF from MongoDB:", error);
+  //     alert("Error fetching PDF from MongoDB");
+  //   }
+  // };
 
   return (
     <>
@@ -158,12 +216,12 @@ function Dashboard() {
                 >
                   <h6>Title: {data.title}</h6>
                   <div className="my-buttons">
-                    <button
+                    {/* <button
                       className="btn btn-primary mr-2"
                       onClick={() => showPdf(data.pdf)}
                     >
                       Show Pdf
-                    </button>
+                    </button> */}
                     <button
                       className="btn btn-danger mr-2"
                       onClick={() => deletePdf(data._id, data.pdf)}
@@ -174,14 +232,20 @@ function Dashboard() {
                       className="btn btn-secondary"
                       onClick={() => handlePrint(data.pdf)}
                     >
-                      Share
+                      Print
                     </button>
+                    {/* <button
+                      className="btn btn-secondary"
+                      onClick={() => getFilesByMongoId(data._id, data.pdf)}
+                    >
+                      Fetch Mongo ID
+                    </button> */}
                   </div>
                 </div>
               ))}
           </div>
         </div>
-        {pdfFile && <PdfComp pdfFile={pdfFile} />}
+        {/* {pdfFile && <PdfComp pdfFile={pdfFile} />} */}
       </div>
     </>
   );
