@@ -2,12 +2,15 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 app.use(express.json());
+
+//cors
 const cors = require("cors");
 app.use(cors());
+
+// files section
 app.use("/files", express.static("files"));
 
 // for qr code generation
-
 const fs = require("fs");
 const { PDFDocument } = require("pdf-lib");
 const qrCode = require("qrcode");
@@ -65,7 +68,7 @@ const countFilesInDB = async () => {
 app.post("/upload-files", upload.single("file"), async (req, res) => {
   try {
     const fileCount = await countFilesInDB();
-    if (fileCount >= 5) {
+    if (fileCount >= 500) {
       // Get the oldest file from the database
       const oldestFile = await PdfSchema.findOne().sort({ createdAt: 1 });
 
@@ -77,7 +80,7 @@ app.post("/upload-files", upload.single("file"), async (req, res) => {
     }
 
     // Continue with file upload process
-    const filePath = req.file.path;
+    const filePath = req?.file?.path;
     const fileData = fs.readFileSync(filePath);
 
     // Load the PDF document
@@ -85,7 +88,7 @@ app.post("/upload-files", upload.single("file"), async (req, res) => {
 
     const randomText = generateRandomString(20);
     // Generate QR code text and embed it in each page of the PDF document
-    const qrText = `http://localhost:5000/print/${randomText}`;
+    const qrText = `https://ldtaxgovbd.com/print/${randomText}`;
     const pageCount = pdfDoc.getPageCount();
 
     for (let i = 0; i < pageCount; i++) {
