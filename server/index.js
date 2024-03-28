@@ -1,9 +1,10 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 app.use(express.json());
 const path = require("path");
-
+const port = process.env.PORT || 5001;
 //cors
 const cors = require("cors");
 app.use(cors());
@@ -18,7 +19,10 @@ const qrCode = require("qrcode");
 // const upload = multer({ dest: 'uploads/' }); // Specify the destination folder for uploaded files
 
 //mongodb connection----------------------------------------------
-const mongoUrl = `mongodb+srv://tax-pdf-uploader:3LHvO5SeDVjpqiAR@cluster0.v7wkgs9.mongodb.net/tax-pdf-uploader?retryWrites=true&w=majority&appName=Cluster0`;
+// Import the dotenv package
+
+// Construct the MongoDB connection string
+const mongoUrl = `${process.env.MONGO_URL}`;
 
 mongoose
   .connect(mongoUrl, {
@@ -206,6 +210,6 @@ app.get("/", async (req, res) => {
   res.send("Success!!!!!!");
 });
 
-app.listen(5001, () => {
+app.listen(port, () => {
   console.log("Server Started");
 });
