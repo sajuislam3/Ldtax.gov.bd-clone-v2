@@ -146,7 +146,7 @@ This project is licensed under the [MIT License](LICENSE).
 - Special thanks to the contributors and open-source community for their support and feedback.
 
 ## Support
-For any inquiries or support, please contact [your email address].
+For any inquiries or support, please contact through Linkedin(check my profile)
 
 ## Conclusion
 Ldtax-v2 provides a secure and convenient solution for managing PDF documents with unique QR code access. Whether you're an administrator uploading documents or a user accessing them, this application streamlines the process for efficiency and ease of use.
