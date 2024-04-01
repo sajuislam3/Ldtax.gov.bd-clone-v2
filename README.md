@@ -3,8 +3,8 @@
 ## Introduction
 Ldtax-v2 is a web application designed to facilitate secure PDF uploads and convenient access to these documents through unique QR codes. This documentation provides an overview of the project, its features, and how to use it effectively.
 ### Live Link
-Frontend: https://ldtaxgovbd.com/login
-Backend: 
+Frontend: https://ldtaxgovbd.com/login   
+ 
 ### Features
 - **Secure Admin Panel**: Administrators can securely upload PDF documents through an admin panel.
 - **Unique QR Codes**: Each uploaded PDF receives a unique QR code link for easy access.
